@@ -1,10 +1,12 @@
 from django import forms
 
-from mailapp.models import Newsletter
+from message.models import Newsletter, MailingMessage
 
 
 class NewsletterForm(forms.ModelForm):
-    """Форма создания и редактирования рассылки."""
+    """Форма создания рассылки."""
+    message = forms.ModelChoiceField(queryset=MailingMessage.objects.all(), empty_label='Выберите сообщение',
+                                     label='Сообщение')
 
     class Meta:
         model = Newsletter

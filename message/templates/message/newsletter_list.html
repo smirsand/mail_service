@@ -1,8 +1,8 @@
-{% extends 'clientapp/base.html' %}
+{% extends 'client/base.html' %}
 {% block content %}
 
 <div class="col-12 mb-5"><br>
-    <a class="btn btn-outline-primary" href="{% url 'mailapp:create_newsletter' %}">Добавить рассылку</a>
+    <a class="btn btn-outline-primary" href="{% url 'message:create_newsletter' %}">Добавить рассылку</a>
 </div>
 <div class="album py-5 bg-light">
     <div class="container">
@@ -16,11 +16,9 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="#" type="button"
+                                    <a href="{% url 'message:detail_newsletter' object.pk %}" type="button"
                                        class="btn btn-sm btn-outline-secondary">Просмотр</a>
-                                    <a href="#" type="button"
-                                       class="btn btn-sm btn-outline-secondary">Редактировать</a>
-                                    <a href="#" type="button"
+                                    <a href="{% url 'message:delete_newsletter' object.pk %}" type="button"
                                        class="btn btn-sm btn-outline-secondary">Удалить</a>
                                 </div>
                             </div>
