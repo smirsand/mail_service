@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from mailapp.models import Newsletter, MailingMessage, MailingLog
+from message.models import Newsletter, MailingMessage, MailingLog
 
 
 @admin.register(Newsletter)
