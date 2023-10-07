@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('mailapp', '0002_alter_mailinglog_options'),
+        ('message', '0002_alter_mailinglog_options'),
     ]
 
     operations = [

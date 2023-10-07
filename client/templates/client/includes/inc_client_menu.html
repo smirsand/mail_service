@@ -3,8 +3,8 @@
     <a class="navbar-brand text-white" href="#">{{ "Меню"|upper }}</a>
     <div class="collapse navbar-collapse" id="navbarHeader">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a href="{% url 'clientapp:clientapp_list' %}" class="nav-link text-white">Главная</a></li>
-            <li class="nav-item"><a href="{% url 'mailapp:mailapp_list' %}" class="nav-link text-white">Рассылки</a>
+            <li class="nav-item"><a href="{% url 'client:list_client' %}" class="nav-link text-white">Главная</a></li>
+            <li class="nav-item"><a href="{% url 'message:list_newsletter' %}" class="nav-link text-white">Рассылки</a>
             </li>
             <li class="nav-item"><a href="#" class="nav-link text-white">Блог</a></li>
             <li class="nav-item"><a href="#" class="nav-link text-white">Контакты</a></li>

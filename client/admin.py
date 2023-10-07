@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from clientapp.models import Client
+from client.models import Client
 
 
 @admin.register(Client)
