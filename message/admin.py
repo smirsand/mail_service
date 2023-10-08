@@ -4,13 +4,8 @@ from message.models import Newsletter, MailingMessage, MailingLog
 
 @admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
-    list_display = ('get_mailing_time', 'periodicity', 'mailing_status')
+    list_display = ('mailing_status', 'periodicity', 'mailing_status')
     verbose_name = 'Рассылка'
-
-    def get_mailing_time(self, obj):
-        return obj.mailing_time.strftime('%Y-%m-%d %H:%M:%S')
-
-    get_mailing_time.short_description = 'Время рассылки'
 
 
 @admin.register(MailingMessage)
