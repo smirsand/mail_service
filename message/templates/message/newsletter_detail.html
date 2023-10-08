@@ -16,7 +16,7 @@
                         <p class="card-text">Статус рассылки</p>
                         <p class="card-text">{{object.mailing_status}}</p>
                         <div class="btn-group">
-                            <a href="#" type="button"
+                            <a href="{% url 'message:update_newsletter' object.pk %}" type="button"
                                class="btn btn-sm btn-outline-secondary">Внести изменения</a>
                         </div>
                     </div>
