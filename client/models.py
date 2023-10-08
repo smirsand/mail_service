@@ -6,13 +6,11 @@ class Client(models.Model):
     Клиент
     """
     email = models.EmailField(verbose_name='почта', unique=True)
-    name = models.CharField(max_length=100, verbose_name='имя')
-    surname = models.CharField(max_length=100, verbose_name='фамилия')
-    patronymic = models.CharField(max_length=100, verbose_name='отчество', blank=True, null=True)
+    full_name = models.CharField(max_length=150, default='', verbose_name='ФИО')
     comment = models.TextField(verbose_name='комментарий', blank=True, null=True)
 
     def __str__(self):
-        return f'{self.name} - {self.email}'
+        return f'{self.full_name} - {self.email}'
 
     class Meta:
         verbose_name = 'клиент'
