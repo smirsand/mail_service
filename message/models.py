@@ -46,7 +46,8 @@ class Newsletter(models.Model):
         (COMPLETED, 'Завершена'),
     ]
 
-    mailing_time = models.DateTimeField(verbose_name='время рассылки', blank=True, null=True)
+    start_time = models.TimeField(verbose_name='время начала рассылки', default=time(hour=14))
+    end_time = models.TimeField(verbose_name='время окончания рассылки', default=time(hour=15))
     periodicity = models.DurationField(max_length=20, choices=FREQUENCY_CHOICES, verbose_name='периодичность')
     mailing_status = models.CharField(max_length=100, choices=STATUS_CHOICES, verbose_name='статус рассылки')
     recipients = models.ManyToManyField(Client, related_name='newsletters', verbose_name='получатели')
