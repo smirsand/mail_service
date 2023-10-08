@@ -4,7 +4,7 @@ from client.models import Client
 
 
 @admin.register(Client)
-class ClientappAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ('full_name',)
     verbose_name = 'Клиенты'
 
