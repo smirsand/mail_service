@@ -14,12 +14,6 @@ class NewsletterCreateView(CreateView):
     template_name = 'message/newsletter_form.html'
     success_url = reverse_lazy('message:list_newsletter')
 
-    def get_form(self, form_class=None):
-        # Выводим значения, передаваемые в поле `periodicity`
-        form = super().get_form(form_class)
-        print(form.fields['periodicity'].choices)
-        return form
-
 
 class NewsletterUpdateView(UpdateView):
     """
@@ -29,12 +23,6 @@ class NewsletterUpdateView(UpdateView):
     form_class = NewsletterForm
     template_name = 'message/newsletter_form.html'
     success_url = reverse_lazy('message:list_newsletter')
-
-    def get_form(self, form_class=None):
-        # Выводим значения, передаваемые в поле `periodicity`
-        form = super().get_form(form_class)
-        print(form.fields['periodicity'].choices)
-        return form
 
 
 class NewsletterListView(ListView):
