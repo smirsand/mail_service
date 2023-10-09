@@ -1,10 +1,22 @@
-""" Бизнес-логика почтовой рассылки."""
+from django.conf import settings
+from django.core.mail import send_mail
+from message.models import MailingLog
 
 
-def send_email(email: str, text: str) -> bool:
-    """
-    Отправляет емайл на указанный адрес с текстом, возвращает результат отправки.
-    """
-    print(f"email отправлен на {email = }")
+def send_mail_custom(message_item):
+    for client in message_item.clients.all():  # Получить адреса получателей
+        send_mail(
+            f'{message_item.message.subject}',
+            f'{message_item.message.content}',
+            settings.EMAIL_HOST_USER,
+            [client.email],
+            fail_silently=False
+        )
 
-    return True
+    log = MailingLog(
+        status=MailingLog.STATUS_OK,
+        newsletter=message_item
+    )
+    log.save()
+
+    return log
