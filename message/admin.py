@@ -16,5 +16,5 @@ class MailingMessageAdmin(admin.ModelAdmin):
 
 @admin.register(MailingLog)
 class MailingLogAdmin(admin.ModelAdmin):
-    list_display = ('date', 'time', 'success', 'newsletter')
+    list_display = ('date', 'time', 'status', 'newsletter')
     verbose_name = 'Лог'
