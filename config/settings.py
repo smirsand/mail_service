@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "django_bootstrap5",
     "django_apscheduler",
+    'django_crontab',
 
     'client',
     'message',
@@ -132,3 +133,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Настройки для отправки электронной почты
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'smirsand0802@yandex.ru'
+EMAIL_HOST_PASSWORD = 'mbvbtqfjxghxujqn'
+EMAIL_USE_SSL = True
+
