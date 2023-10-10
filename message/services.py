@@ -20,3 +20,12 @@ def send_mail_custom(message_item):
     log.save()
 
     return log
+
+
+def send_new_password(email, new_password):
+    send_mail(
+        subject='Вы сменили пароль!',
+        message=f'Ваш новый пароль: {new_password}',
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[email]
+    )
