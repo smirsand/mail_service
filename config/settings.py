@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'client',
     'message',
+    'users',
 
 ]
 
@@ -141,3 +142,6 @@ EMAIL_HOST_USER = 'smirsand0802@yandex.ru'
 EMAIL_HOST_PASSWORD = 'mbvbtqfjxghxujqn'
 EMAIL_USE_SSL = True
 
+AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
