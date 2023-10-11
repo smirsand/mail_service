@@ -18,7 +18,7 @@
                         <p class="card-text">Ответ сервера</p>
                         <p class="card-text">{{object.server_response}}</p>
                         <p class="card-text">Рассылка</p>
-                        <p class="card-text">{{object.newsletter}}</p>
+                        <p class="card-text">{{object.newsletter.clients}}</p>
                         <div class="btn-group">
                             <a href="{% url 'message:update_newsletter' object.pk %}" type="button"
                                class="btn btn-sm btn-outline-secondary">Внести изменения</a>
