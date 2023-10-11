@@ -112,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -139,7 +139,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'smirsand0802@yandex.ru'
-EMAIL_HOST_PASSWORD = 'mbvbtqfjxghxujqn'
+EMAIL_HOST_PASSWORD = 'pqedmxazpazrvvah'    #  pqedmxazpazrvvah   mbvbtqfjxghxujqn
 EMAIL_USE_SSL = True
 
 AUTH_USER_MODEL = 'users.User'
