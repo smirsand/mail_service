@@ -1,8 +1,9 @@
-from datetime import timedelta
+from datetime import timedelta, date
 
 from django.db import models
 from datetime import time
 
+from django.utils import timezone
 from client.models import Client
 
 
@@ -10,6 +11,15 @@ class MailingMessage(models.Model):
     """
     Сообщение для рассылки
     """
+    SEND = 'К отправке'
+    SENT = 'Отправлено'
+
+    STATUS_CHOICES = [
+        (SEND, "отправить"),
+        (SENT, "Отправлено"),
+    ]
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=SEND, verbose_name='статус отправки')
+
     subject = models.CharField(max_length=100, verbose_name='тема письма')
     content = models.TextField(verbose_name='тело письма')
 
@@ -46,6 +56,8 @@ class Newsletter(models.Model):
         (COMPLETED, 'Завершена'),
     ]
 
+    start_date = models.DateField(verbose_name='дата начала рассылки', default=timezone.now)
+    end_date = models.DateField(verbose_name='дата окончания рассылки', default=date(2023, 12, 31))
     start_time = models.TimeField(verbose_name='время начала рассылки', default=time(hour=14))
     end_time = models.TimeField(verbose_name='время окончания рассылки', default=time(hour=15))
     periodicity = models.DurationField(max_length=20, choices=FREQUENCY_CHOICES, default=DAILY,
@@ -55,6 +67,9 @@ class Newsletter(models.Model):
     clients = models.ManyToManyField(Client, related_name='newsletters', verbose_name='получатели')
     message = models.ForeignKey(MailingMessage, on_delete=models.CASCADE, related_name='newsletters',
                                 verbose_name='сообщение')
+
+    def clients_list(self, obj):
+        return ", ".join([str(client.full_name) for client in obj.all()])
 
     def __str__(self):
         return f'Рассылка {self.id} - {self.mailing_status}'
@@ -80,7 +95,7 @@ class MailingLog(models.Model):
     time = models.TimeField(auto_now_add=True, verbose_name='время попытки')
     status = models.CharField(max_length=20, choices=STATUSES, verbose_name='статус')
     server_response = models.TextField(verbose_name='ответ сервера', blank=True)
-    newsletter = models.OneToOneField(Newsletter, on_delete=models.CASCADE, related_name='logs',
+    newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE, related_name='logs',   # ForeignKey
                                       verbose_name='рассылка')
 
     def __str__(self):
