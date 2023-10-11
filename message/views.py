@@ -3,7 +3,6 @@ from django.views.generic import ListView, CreateView, DeleteView, DetailView, U
 
 from message.forms import NewsletterForm
 from message.models import Newsletter, MailingLog
-from message.services import send_mail_custom
 
 
 class NewsletterCreateView(CreateView):
@@ -14,11 +13,6 @@ class NewsletterCreateView(CreateView):
     form_class = NewsletterForm
     template_name = 'message/newsletter_form.html'
     success_url = reverse_lazy('message:list_newsletter')
-
-    def form_valid(self, form):
-        obj = form.save()
-        send_mail_custom(obj)
-        return super().form_valid(form)
 
 
 class NewsletterUpdateView(UpdateView):
