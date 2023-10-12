@@ -4,12 +4,14 @@ from users.models import User
 
 
 class Command(BaseCommand):
-
+    """
+    Класс нового пользователя.
+    """
     def handle(self, *args, **kwargs):
         user = User.objects.create(
             email='smirsand@mail.ru',
-            first_name='Admin',
-            last_name='Admin',
+            first_name='Сергей',
+            last_name='Смирнов',
             is_staff=True,
             is_superuser=True
         )
