@@ -44,7 +44,7 @@ class Newsletter(models.Model):
         return ", ".join([str(client.full_name) for client in self.clients.all()])  # Обновленный код
 
     def __str__(self):
-        return f'Рассылка {self.id} - {self.mailing_status}'
+        return f' {self.start_date}/{self.start_time} - {self.mailing_status}'
 
     class Meta:
         verbose_name = 'рассылка'
@@ -90,7 +90,7 @@ class MailingLog(models.Model):
 
     date = models.DateField(auto_now_add=True, verbose_name='дата попытки')
     time = models.TimeField(auto_now_add=True, verbose_name='время попытки')
-    status = models.CharField(max_length=20, choices=STATUSES, verbose_name='статус')
+    status = models.CharField(max_length=20, choices=STATUSES, default='Успешно', verbose_name='статус')
     server_response = models.TextField(verbose_name='ответ сервера', blank=True)
     newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE, related_name='logs', verbose_name='рассылка')
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='клиент',
@@ -98,12 +98,14 @@ class MailingLog(models.Model):
 
     def __str__(self):
         if self.status == MailingLog.STATUS_OK:
-            return f'Лог {self.id} - Успешно'
+            status_text = 'Успешно'
         elif self.status == MailingLog.STATUS_FAILED:
-            return f'Лог {self.id} - Не успешно'
+            status_text = 'Ошибка'
         else:
-            return f'Лог {self.id} - Неизвестный статус'
+            status_text = 'Неизвестный статус'
+
+        return f'{self.time} {status_text}'
 
     class Meta:
-        verbose_name = 'лог рассылки'
-        verbose_name_plural = 'логи рассылки'
+        verbose_name = 'лог'
+        verbose_name_plural = 'логи'
