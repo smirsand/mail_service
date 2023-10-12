@@ -15,8 +15,8 @@
                         {% endfor %}
                         <p class="card-text">Время рассылки: </p>
                         <p class="card-text">{{object.start_time}}</p>
-                        <p class="card-text">Периодичность рассылки</p>
-                        <p class="card-text">{{object.periodicity}}</p>
+                        <p class="card-text">Периодичность рассылки: </p>
+                        <p class="card-text">{{ object.get_periodicity_display }}</p>
                         <p class="card-text">Статус рассылки</p>
                         <p class="card-text">{{object.mailing_status}}</p>
                         <div class="btn-group">

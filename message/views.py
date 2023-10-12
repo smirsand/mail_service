@@ -42,16 +42,17 @@ class NewsletterDetailView(DetailView):
 
 
 class NewsletterDeleteView(DeleteView):
+    """
+    Контроллер для удаления рассылки.
+    """
     model = Newsletter
     template_name = 'message/newsletter_confirm_delete.html'
     success_url = reverse_lazy('message:list_newsletter')
 
 
 class MailingLogListView(ListView):
+    """
+    Контроллер для просмотра списка логов.
+    """
     model = MailingLog
-    template_name = 'message/mailinglog_list.html'
-
-
-class MailingLogDetailView(DetailView):
-    model = MailingLog
-    template_name = 'message/mailinglog_detail.html'
+    template_name = 'message/log_list.html'
