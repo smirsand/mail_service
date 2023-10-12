@@ -1,6 +1,8 @@
 import datetime
 import random
 from smtplib import SMTPException
+
+from django.http import BadHeaderError
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
@@ -22,20 +24,30 @@ def send_email(client, mailing, message):
         MailingLog.objects.create(
             newsletter=mailing,
             client=client,
-            status=result,
+            status=MailingLog.STATUS_OK,
         )
 
-        if result == 1:
-            print("Письмо успешно отправлено")
-        else:
-            print("Ошибка отправки письма")
+    except BadHeaderError as e:
+        print("Произошла ошибка BadHeaderError при отправке письма:", str(e))
+        MailingLog.objects.create(
+            newsletter=mailing,
+            client=client,
+            status=MailingLog.STATUS_FAILED,
+            server_response="BadHeaderError: " + str(e),
+        )
 
     except SMTPException as e:
         print("Произошла ошибка SMTP при отправке письма:", str(e))
+        MailingLog.objects.create(
+            newsletter=mailing,
+            client=client,
+            status=MailingLog.STATUS_FAILED,
+            server_response="SMTPException: " + str(e),
+        )
 
 
 def send_mails():
-    now = timezone.now()
+
     now_time = timezone.localtime(timezone.now()).time()
 
     for mailing in Newsletter.objects.all().filter(mailing_status=Newsletter.STARTED):
