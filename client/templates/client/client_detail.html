@@ -1,0 +1,28 @@
+{% extends 'client/base.html' %}
+
+{% block content %}
+<!doctype html>
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <p class="card-text">{{object.mailing_time}}</p>
+            <div class="col-md-4">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-body">
+                        <p class="card-text">ФИО: </p>
+                        <p class="card-text">{{object.full_name}}</p>
+                        <p class="card-text">Email</p>
+                        <p class="card-text">{{object.email}}</p>
+                        <p class="card-text">Комментарий</p>
+                        <p class="card-text">{{object.comment}}</p>
+                        <div class="btn-group">
+                            <a href="{% url 'client:update_client' object.pk %}" type="button"
+                               class="btn btn-sm btn-outline-secondary">Внести изменения</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

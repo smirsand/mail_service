@@ -1,0 +1,32 @@
+{% extends 'client/base.html' %}
+
+{% block content %}
+<!doctype html>
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <p class="card-text"></p>
+            <div class="col-md-4">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-body">
+                        <p class="card-text">Получатели: </p>
+                        {% for client in object.clients.all %}
+                        <p>{{ client.full_name }}</p>
+                        {% endfor %}
+                        <p class="card-text">Время рассылки: </p>
+                        <p class="card-text">{{object.start_time}}</p>
+                        <p class="card-text">Периодичность рассылки</p>
+                        <p class="card-text">{{object.periodicity}}</p>
+                        <p class="card-text">Статус рассылки</p>
+                        <p class="card-text">{{object.mailing_status}}</p>
+                        <div class="btn-group">
+                            <a href="{% url 'message:update_newsletter' object.pk %}" type="button"
+                               class="btn btn-sm btn-outline-secondary">Внести изменения</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
