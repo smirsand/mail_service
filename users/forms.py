@@ -18,3 +18,7 @@ class UserProfileForm(UserChangeForm):
         super().__init__(*args, **kwargs)
 
         self.fields['password'].widget = forms.HiddenInput()  # Скрывает поле password в форме.
+
+
+class UserVerificationForm(forms.Form):
+    code = forms.CharField(max_length=6, min_length=6)
