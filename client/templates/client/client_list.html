@@ -2,7 +2,9 @@
 {% block content %}
 
 <div class="col-12 mb-5"><br>
+    {% if perms.client.create_client %}
     <a class="btn btn-outline-primary" href="{% url 'client:create_client' %}">Добавить клиента</a>
+    {% endif %}
 </div>
 <div class="album py-5 bg-light">
     <div class="container">
@@ -19,10 +21,14 @@
                                 <div class="btn-group">
                                     <a href="{% url 'client:detail_client' object.pk %}" type="button"
                                        class="btn btn-sm btn-outline-secondary">Просмотр</a>
+                                    {% if perms.client.update_client %}
                                     <a href="{% url 'client:update_client' object.pk %}" type="button"
                                        class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                                    {% endif %}
+                                    {% if perms.client.delete_client %}
                                     <a href="{% url 'client:delete_client' object.pk %}" type="button"
                                        class="btn btn-sm btn-outline-secondary">Удалить</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
