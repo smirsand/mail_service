@@ -30,6 +30,7 @@ class Newsletter(models.Model):
         (STARTED, "Запущена"),
     ]
 
+    is_active = models.BooleanField(default=True)
     start_date = models.DateField(verbose_name='дата начала рассылки', default=timezone.now)
     end_date = models.DateField(verbose_name='дата окончания рассылки', default=date(2023, 12, 31))
     start_time = models.TimeField(verbose_name='время начала рассылки', default=time(hour=14))
@@ -41,7 +42,7 @@ class Newsletter(models.Model):
     clients = models.ManyToManyField(Client, related_name='newsletters', verbose_name='получатели')
 
     def clients_list(self):
-        return ", ".join([str(client.full_name) for client in self.clients.all()])  # Обновленный код
+        return ", ".join([str(client.full_name) for client in self.clients.all()])
 
     def __str__(self):
         return f' {self.start_date}/{self.start_time} - {self.mailing_status}'
@@ -49,6 +50,10 @@ class Newsletter(models.Model):
     class Meta:
         verbose_name = 'рассылка'
         verbose_name_plural = 'рассылки'
+
+        permissions = [
+            ('is_active', 'Can block рассылки')
+        ]
 
 
 class MailingMessage(models.Model):
