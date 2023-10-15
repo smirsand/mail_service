@@ -69,22 +69,6 @@ class NewsletterListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
         return queryset
 
-    # def get_context_data(self, *args, **kwargs):
-    #     context_data = super().get_context_data(*args, **kwargs)
-    #     client_pk = self.kwargs.get('pk')
-    #     context_data['newsletter'] = self.model.objects.filter(clients=client_pk)
-    #     return context_data
-
-    # def get_queryset(self):
-    #     queryset = super().get_queryset().filter(
-    #         id=self.kwargs.get('pk'),
-    #     )
-    #
-    #     if not self.request.user.is_staff:
-    #        queryset = queryset.filter(clients=self.request.user)
-    #
-    #     return queryset
-
 
 class NewsletterDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     """

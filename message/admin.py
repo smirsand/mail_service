@@ -18,9 +18,11 @@ class NewsletterAdmin(admin.ModelAdmin):
 class MailingMessageAdmin(admin.ModelAdmin):
     list_display = ('subject', 'content', 'status', 'newsletter')
     verbose_name = 'Письмо'
+    verbose_name_plural = 'Письма'
 
 
 @admin.register(MailingLog)
 class MailingLogAdmin(admin.ModelAdmin):
     list_display = ('date', 'time', 'status', 'newsletter')
     verbose_name = 'Лог'
+    verbose_name_plural = 'Логи'
