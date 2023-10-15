@@ -2,6 +2,7 @@ import datetime
 import random
 from smtplib import SMTPException
 
+from django.core.cache import cache
 from django.http import BadHeaderError
 from django.utils import timezone
 from django.core.mail import send_mail
