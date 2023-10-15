@@ -1,9 +1,29 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 
+from blog.models import Blog
 from client.forms import ClientForm
 from client.models import Client
+from message.models import Newsletter
+
+
+def home(request):
+    template_name = 'client/home.html'
+    total_newsletters = Newsletter.objects.count()
+    active_newsletters = Newsletter.objects.filter(is_active=True).count()
+    unique_clients = Newsletter.objects.values('clients').distinct().count()
+    random_articles = Blog.objects.order_by('?')[:3]
+
+    context = {
+        'total_newsletters': total_newsletters,
+        'active_newsletters': active_newsletters,
+        'unique_clients': unique_clients,
+        'random_articles': random_articles,
+    }
+
+    return render(request, template_name, context)
 
 
 class ClientListView(LoginRequiredMixin, ListView):

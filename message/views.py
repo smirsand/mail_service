@@ -53,14 +53,12 @@ class NewsletterListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = 'message/newsletter_list.html'
 
     def get_queryset(self):
-        # Получаем текущего пользователя
+
         user = self.request.user
 
-        if user.is_superuser:
-            # Если пользователь является суперпользователем, показываем все рассылки
+        if user.is_staff:
             queryset = super().get_queryset()
         else:
-            # Фильтруем рассылки по клиентам, связанным с пользователем
             try:
                 client = Client.objects.get(user=user)
                 queryset = super().get_queryset().filter(client=client)
