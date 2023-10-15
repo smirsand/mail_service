@@ -1,7 +1,7 @@
-from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
 from blog.models import Blog
+from blog.services import get_blog_cache
 
 
 class BlogListView(ListView):
@@ -10,6 +10,12 @@ class BlogListView(ListView):
     """
     model = Blog
     template_name = 'blog/blog_list.html'
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        get_blog_cache(self)
+        context_data['blog'] = get_blog_cache(self)
+        return context_data
 
 
 class BlogDetailView(DetailView):

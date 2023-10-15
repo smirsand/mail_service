@@ -65,3 +65,16 @@ def pass_verification(request, pk):
         form = UserVerificationForm()
 
     return render(request, 'users/verification_form.html', {'form': form, 'pk': pk})
+
+
+def toggle_user_status(request, pk):
+    user = get_object_or_404(User, pk=pk)
+
+    if user.is_active:
+        user.is_active = False
+    else:
+        user.is_active = True
+
+    user.save()
+
+    return redirect('newsletter:view')
