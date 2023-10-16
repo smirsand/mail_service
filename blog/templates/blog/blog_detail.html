@@ -2,15 +2,20 @@
 
 {% block content %}
 <!doctype html>
-<div class="album py-5 bg-light">
+<style>
+    .container {
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 20px;
+    }
+</style>
+<div class="album py-6 bg-light">
     <div class="container">
         <div class="row">
             <p class="card-text">{{object.title}}</p>
             <div class="col-md-4">
                 <div class="card mb-4 box-shadow">
                     <div class="card-body">
-                        <p class="card-text"></p>
-                        <p class="card-text">{{object.title}}</p>
                         <p class="card-text"></p>
                         <p class="card-text">{{object.content}}</p>
                         <p class="card-text"></p>
