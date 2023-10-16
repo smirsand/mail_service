@@ -1,18 +1,21 @@
 import datetime
 import random
+from datetime import datetime, timedelta
 from smtplib import SMTPException
 
-from django.core.cache import cache
+from django.conf import settings
+from django.core.mail import send_mail
 from django.http import BadHeaderError
 from django.utils import timezone
-from django.core.mail import send_mail
-from django.conf import settings
+
 from message.models import Newsletter, MailingMessage, MailingLog
 from users.models import User
-from datetime import datetime, timedelta
 
 
 def send_email(client, mailing, message):
+    """
+    Отправляет электронное письмо клиенту.
+    """
     try:
         result = send_mail(
             subject=message.subject,
@@ -48,17 +51,15 @@ def send_email(client, mailing, message):
 
 
 def send_mails():
-
+    """
+    Отправляет сообщения клиентам в рамках запущенных рассылок.
+    """
     now_time = timezone.localtime(timezone.now()).time()
 
     for mailing in Newsletter.objects.all().filter(mailing_status=Newsletter.STARTED):
-
         if mailing.start_time <= now_time < mailing.end_time:
-
             for mailing_client in mailing.clients.all():
-
                 message = MailingMessage.objects.filter(newsletter=mailing, status=MailingMessage.SEND).first()
-
                 if message is None:
                     return
 
@@ -70,7 +71,6 @@ def send_mails():
                 if log.exists():
                     last_try_date = log.order_by('-time').first().time
                     last_try_datetime = datetime.combine(datetime.now().date(), last_try_date)
-
                     now = timezone.localtime(timezone.now()).replace(tzinfo=last_try_datetime.tzinfo)
 
                     if mailing.periodicity == timedelta(days=1):
@@ -93,6 +93,9 @@ def send_mails():
 
 
 def send_new_password(email, new_password):
+    """
+    Отправка смены пароля.
+    """
     send_mail(
         subject='Вы сменили пароль!',
         message=f'Ваш новый пароль: {new_password}',
@@ -102,6 +105,9 @@ def send_new_password(email, new_password):
 
 
 def send_for_confirmation(user_pk):
+    """
+    Отправка пароля подтверждения.
+    """
     user = User.objects.get(pk=user_pk)
 
     send_mail(

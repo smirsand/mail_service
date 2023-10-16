@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DeleteView, DetailView, UpdateView
@@ -19,13 +18,6 @@ class NewsletterCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
     template_name = 'message/newsletter_form.html'
     success_url = reverse_lazy('message:list_newsletter')
 
-    # def form_valid(self, form):
-    #     newsletter_object = form.save(commit=False)
-    #     newsletter_object.clients = self.request.user
-    #     newsletter_object.save()
-    #
-    #     return super().form_valid(form)
-
 
 class NewsletterUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """
@@ -36,12 +28,6 @@ class NewsletterUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     permission_required = 'message.update_newsletter'
     template_name = 'message/newsletter_form.html'
     success_url = reverse_lazy('message:list_newsletter')
-
-    # def get_object(self, queryset=None):
-    #     self.object = super().get_object(queryset)
-    #     if self.object.clients != self.request.user and not self.request.user.is_staff:
-    #         raise Http404
-    #     return self.object
 
 
 class NewsletterListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -102,7 +88,6 @@ def toggle_active_newsletter(request, pk):
         newsletter_item.is_active = False
     else:
         newsletter_item.is_active = True
-
     newsletter_item.save()
 
     return redirect(reverse('message:list_newsletter'))
