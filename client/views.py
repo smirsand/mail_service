@@ -10,6 +10,9 @@ from message.models import Newsletter
 
 
 def home(request):
+    """
+    Контроллер главной страницы.
+    """
     template_name = 'client/home.html'
     total_newsletters = Newsletter.objects.count()
     active_newsletters = Newsletter.objects.filter(is_active=True).count()
@@ -67,6 +70,9 @@ class ClientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
 
 class ClientDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    """
+    Контроллер для удаления карточки клиента.
+    """
     model = Client
     permission_required = 'client.delete_client'
     template_name = 'client/client_confirm_delete.html'
