@@ -8,7 +8,6 @@ class NewsletterForm(forms.ModelForm):
     message = forms.ModelChoiceField(queryset=MailingMessage.objects.all(), empty_label='Выберите сообщение',
                                      label='Сообщение')
 
-
     class Meta:
         model = Newsletter
         fields = '__all__'

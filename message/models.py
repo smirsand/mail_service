@@ -1,13 +1,15 @@
-from datetime import timedelta, date
-from django.db import models
 from datetime import time
+from datetime import timedelta, date
+
+from django.db import models
 from django.utils import timezone
+
 from client.models import Client
 
 
 class Newsletter(models.Model):
     """
-    Рассылка
+    Модель рассылки.
     """
 
     DAILY = timedelta(days=1)
@@ -58,7 +60,7 @@ class Newsletter(models.Model):
 
 class MailingMessage(models.Model):
     """
-    Сообщение для рассылки
+    Модель сообщений для рассылки.
     """
     SEND = 'К отправке'
     SENT = 'Отправлено'
@@ -83,7 +85,7 @@ class MailingMessage(models.Model):
 
 class MailingLog(models.Model):
     """
-    Лог рассылки
+    Модель логов рассылки.
     """
     STATUS_OK = 'ok'
     STATUS_FAILED = 'failed'
