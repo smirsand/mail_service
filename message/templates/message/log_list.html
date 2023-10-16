@@ -1,0 +1,34 @@
+{% extends 'client/base.html' %}
+
+{% block content %}
+<div class="col-12 mb-5"><br>
+</div>
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row">
+<div class="row">
+    {% for object in object_list %}
+    <div class="col-md-4">
+        <div class="card mb-4 box-shadow">
+            <div class="card-body">
+                <p class="card-text">
+                    {% if object.time %}
+                    Время: {{ object.time }}
+                    {% endif %}</p>
+                <p class="card-text">
+                    {% if object.client %}
+                    Пользователь: {{ object.client }}
+                    {% endif %}</p>
+                <p class="card-text">
+                    {% if object.newsletter %}
+                    Рассылка: {{ object.newsletter }}
+                    {% endif %}</p>
+                <p class="card-text">Статус: {{ object.get_status_display }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

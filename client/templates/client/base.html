@@ -19,15 +19,7 @@
     {% include 'client/includes/inc_client_menu.html' %}
 </header>
 
-<main>
-    <section class="py-5 text-center container">
-        <div class="row py-lg-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="fw-light"></h1>
-            </div>
-        </div>
-    </section>
-
+<main style="margin: 40px;">
     <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -42,18 +34,6 @@
     {% block content %}
     {% endblock %}
     <div class="row">
-        <div class="col-6 col-md">
-            <h5>Дополнительно</h5>
-            <ul class="list-unstyled text-small">
-                <li><a class="text-muted" href="#">Напишите нам</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md">
-            <h5>О нас</h5>
-            <ul class="list-unstyled text-small">
-                <li><a class="text-muted" href="/contacts/">Контакты</a></li>
-            </ul>
-        </div>
         <div>
             <p>&copy;
                 {% now 'Y' %}

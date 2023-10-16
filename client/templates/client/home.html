@@ -1,0 +1,25 @@
+{% extends 'client/base.html' %}
+{% block content %}
+
+<h2>Информация по рассылкам:</h2>
+<p>Количество рассылок всего: {{ total_newsletters }}</p>
+<p>Количество активных рассылок: {{ active_newsletters }}</p>
+<p>Количество уникальных клиентов для рассылок: {{ unique_clients }}</p>
+
+<h2>Обзор статей из блога:</h2>
+<div class="row">
+    {% for article in random_articles %}
+    <div class="col-md-4">
+        <div class="card mb-4 box-shadow">
+            <div class="card-header">
+                <p class="card-text">{{ article.title }}</p>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'blog:blog_view' article.pk %}" class="btn btn-sm btn-outline-secondary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

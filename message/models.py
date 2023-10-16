@@ -1,39 +1,15 @@
+from datetime import time
 from datetime import timedelta, date
 
 from django.db import models
-from datetime import time
-
 from django.utils import timezone
+
 from client.models import Client
-
-
-class MailingMessage(models.Model):
-    """
-    Сообщение для рассылки
-    """
-    SEND = 'К отправке'
-    SENT = 'Отправлено'
-
-    STATUS_CHOICES = [
-        (SEND, "отправить"),
-        (SENT, "Отправлено"),
-    ]
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=SEND, verbose_name='статус отправки')
-
-    subject = models.CharField(max_length=100, verbose_name='тема письма')
-    content = models.TextField(verbose_name='тело письма')
-
-    def __str__(self):
-        return self.subject
-
-    class Meta:
-        verbose_name = 'сообщение для рассылки'
-        verbose_name_plural = 'сообщения для рассылки'
 
 
 class Newsletter(models.Model):
     """
-    Рассылка
+    Модель рассылки.
     """
 
     DAILY = timedelta(days=1)
@@ -51,11 +27,12 @@ class Newsletter(models.Model):
     COMPLETED = 'Завершена'
 
     STATUS_CHOICES = [
-        (CREATED, 'Создана'),
-        (STARTED, 'Запущена'),
-        (COMPLETED, 'Завершена'),
+        (COMPLETED, "Завершена"),
+        (CREATED, "Создана"),
+        (STARTED, "Запущена"),
     ]
 
+    is_active = models.BooleanField(default=True)
     start_date = models.DateField(verbose_name='дата начала рассылки', default=timezone.now)
     end_date = models.DateField(verbose_name='дата окончания рассылки', default=date(2023, 12, 31))
     start_time = models.TimeField(verbose_name='время начала рассылки', default=time(hour=14))
@@ -65,23 +42,50 @@ class Newsletter(models.Model):
     mailing_status = models.CharField(max_length=100, choices=STATUS_CHOICES, default=CREATED,
                                       verbose_name='статус рассылки')
     clients = models.ManyToManyField(Client, related_name='newsletters', verbose_name='получатели')
-    message = models.ForeignKey(MailingMessage, on_delete=models.CASCADE, related_name='newsletters',
-                                verbose_name='сообщение')
 
-    def clients_list(self, obj):
-        return ", ".join([str(client.full_name) for client in obj.all()])
+    def clients_list(self):
+        return ", ".join([str(client.full_name) for client in self.clients.all()])
 
     def __str__(self):
-        return f'Рассылка {self.id} - {self.mailing_status}'
+        return f' {self.start_date}/{self.start_time} - {self.mailing_status}'
 
     class Meta:
         verbose_name = 'рассылка'
         verbose_name_plural = 'рассылки'
 
+        permissions = [
+            ('is_active', 'Can block рассылки')
+        ]
+
+
+class MailingMessage(models.Model):
+    """
+    Модель сообщений для рассылки.
+    """
+    SEND = 'К отправке'
+    SENT = 'Отправлено'
+
+    STATUS_CHOICES = [
+        (SEND, "К отправке"),
+        (SENT, "Отправлено"),
+    ]
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=SEND, verbose_name='статус отправки')
+    newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE, related_name='messages',
+                                   default=Newsletter.objects.first(), verbose_name='рассылка')
+    subject = models.CharField(max_length=100, verbose_name='тема письма')
+    content = models.TextField(verbose_name='тело письма')
+
+    def __str__(self):
+        return self.subject
+
+    class Meta:
+        verbose_name = 'сообщение для рассылки'
+        verbose_name_plural = 'сообщения для рассылки'
+
 
 class MailingLog(models.Model):
     """
-    Лог рассылки
+    Модель логов рассылки.
     """
     STATUS_OK = 'ok'
     STATUS_FAILED = 'failed'
@@ -93,19 +97,22 @@ class MailingLog(models.Model):
 
     date = models.DateField(auto_now_add=True, verbose_name='дата попытки')
     time = models.TimeField(auto_now_add=True, verbose_name='время попытки')
-    status = models.CharField(max_length=20, choices=STATUSES, verbose_name='статус')
+    status = models.CharField(max_length=20, choices=STATUSES, default='Успешно', verbose_name='статус')
     server_response = models.TextField(verbose_name='ответ сервера', blank=True)
-    newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE, related_name='logs',   # ForeignKey
-                                      verbose_name='рассылка')
+    newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE, related_name='logs', verbose_name='рассылка')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='клиент',
+                               related_name='mailing_logs', blank=True, null=True)
 
     def __str__(self):
         if self.status == MailingLog.STATUS_OK:
-            return f'Лог {self.id} - Успешно'
+            status_text = 'Успешно'
         elif self.status == MailingLog.STATUS_FAILED:
-            return f'Лог {self.id} - Не успешно'
+            status_text = 'Ошибка'
         else:
-            return f'Лог {self.id} - Неизвестный статус'
+            status_text = 'Неизвестный статус'
+
+        return f'{self.time} {status_text}'
 
     class Meta:
-        verbose_name = 'лог рассылки'
-        verbose_name_plural = 'логи рассылки'
+        verbose_name = 'лог'
+        verbose_name_plural = 'логи'

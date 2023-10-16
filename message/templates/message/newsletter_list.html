@@ -2,7 +2,9 @@
 {% block content %}
 
 <div class="col-12 mb-5"><br>
+    {% if perms.message.create_newsletter %}
     <a class="btn btn-outline-primary" href="{% url 'message:create_newsletter' %}">Добавить рассылку</a>
+    {% endif %}
 </div>
 <div class="album py-5 bg-light">
     <div class="container">
@@ -18,9 +20,16 @@
                                 <div class="btn-group">
                                     <a href="{% url 'message:detail_newsletter' object.pk %}" type="button"
                                        class="btn btn-sm btn-outline-secondary">Просмотр</a>
+                                    {% if perms.message.delete_newsletter %}
                                     <a href="{% url 'message:delete_newsletter' object.pk %}" type="button"
                                        class="btn btn-sm btn-outline-secondary">Удалить</a>
+                                    {% endif %}
                                 </div>
+                                {% if object.is_active %}
+                                    <a class="btn btn-warning" href="{% url 'message:toggle_active_newsletter' object.pk %}">Деактивировать</a>
+                                {% else %}
+                                    <a class="btn btn-success" href="{% url 'message:toggle_active_newsletter' object.pk %}">Активировать</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

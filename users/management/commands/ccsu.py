@@ -7,6 +7,7 @@ class Command(BaseCommand):
     """
     Класс нового пользователя.
     """
+
     def handle(self, *args, **kwargs):
         user = User.objects.create(
             email='smirsand@mail.ru',

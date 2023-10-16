@@ -1,13 +1,21 @@
+import datetime
+import random
+from datetime import datetime, timedelta
 from smtplib import SMTPException
 
-from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import send_mail
+from django.http import BadHeaderError
 from django.utils import timezone
 
 from message.models import Newsletter, MailingMessage, MailingLog
+from users.models import User
 
 
 def send_email(client, mailing, message):
+    """
+    Отправляет электронное письмо клиенту.
+    """
     try:
         result = send_mail(
             subject=message.subject,
@@ -20,57 +28,100 @@ def send_email(client, mailing, message):
         MailingLog.objects.create(
             newsletter=mailing,
             client=client,
-            status=result,
+            status=MailingLog.STATUS_OK,
         )
 
-        if result == 1:
-            print("Письмо успешно отправлено")
-        else:
-            print("Ошибка отправки письма")
+    except BadHeaderError as e:
+        print("Произошла ошибка BadHeaderError при отправке письма:", str(e))
+        MailingLog.objects.create(
+            newsletter=mailing,
+            client=client,
+            status=MailingLog.STATUS_FAILED,
+            server_response="BadHeaderError: " + str(e),
+        )
 
     except SMTPException as e:
         print("Произошла ошибка SMTP при отправке письма:", str(e))
+        MailingLog.objects.create(
+            newsletter=mailing,
+            client=client,
+            status=MailingLog.STATUS_FAILED,
+            server_response="SMTPException: " + str(e),
+        )
 
 
 def send_mails():
-    now = timezone.now()
-    now_time = now.time()
+    """
+    Отправляет сообщения клиентам в рамках запущенных рассылок.
+    """
+    now_time = timezone.localtime(timezone.now()).time()
 
-    for mailing in Newsletter.objects.filter(mailing_status=Newsletter.STARTED):
-        if mailing.start_date <= now.date() <= mailing.end_date and mailing.start_time < now_time < mailing.end_time:
+    for mailing in Newsletter.objects.all().filter(mailing_status=Newsletter.STARTED):
+        if mailing.start_time <= now_time < mailing.end_time:
             for mailing_client in mailing.clients.all():
-                if mailing_client is not None:  # Проверка, что клиент существует
-                    message = mailing.message
+                message = MailingMessage.objects.filter(newsletter=mailing, status=MailingMessage.SEND).first()
+                if message is None:
+                    return
 
-                    if message.status == MailingMessage.SEND:  # Проверка, что сообщение пригодно к отправке
-                        log = MailingLog.objects.filter(newsletter=mailing, client=mailing_client)
+                log = MailingLog.objects.filter(
+                    client=mailing_client,
+                    newsletter=mailing
+                )
 
-                        if log.exists():
-                            last_try_date = log.order_by('-time').first().time
+                if log.exists():
+                    last_try_date = log.order_by('-time').first().time
+                    last_try_datetime = datetime.combine(datetime.now().date(), last_try_date)
+                    now = timezone.localtime(timezone.now()).replace(tzinfo=last_try_datetime.tzinfo)
 
-                            if mailing.periodicity == Newsletter.DAILY:
-                                if (now.date() - last_try_date.date()) >= Newsletter.DAILY:
-                                    send_email(mailing_client, mailing, message)
-
-                            elif mailing.periodicity == Newsletter.WEEKLY:
-                                if (now.date() - last_try_date.date()) >= Newsletter.WEEKLY:
-                                    send_email(mailing_client, mailing, message)
-
-                            elif mailing.periodicity == Newsletter.MONTHLY:
-                                if (now.date() - last_try_date.date()) >= Newsletter.MONTHLY:
-                                    send_email(mailing_client, mailing, message)
-
-                        else:
+                    if mailing.periodicity == timedelta(days=1):
+                        if (now - last_try_datetime) >= timedelta(days=1):
                             send_email(mailing_client, mailing, message)
 
-                    message.status = MailingMessage.SENT
-                    message.save()
+                    elif mailing.periodicity == timedelta(weeks=1):
+                        if (now - last_try_datetime) >= timedelta(weeks=1):
+                            send_email(mailing_client, mailing, message)
+
+                    elif mailing.periodicity == timedelta(days=30):
+                        if (now - last_try_datetime) >= timedelta(days=30):
+                            send_email(mailing_client, mailing, message)
+
+                else:
+                    send_email(mailing_client, mailing, message)
+
+            message.status = MailingMessage.SENT
+            message.save()
 
 
 def send_new_password(email, new_password):
+    """
+    Отправка смены пароля.
+    """
     send_mail(
         subject='Вы сменили пароль!',
         message=f'Ваш новый пароль: {new_password}',
         from_email=settings.EMAIL_HOST_USER,
         recipient_list=[email]
     )
+
+
+def send_for_confirmation(user_pk):
+    """
+    Отправка пароля подтверждения.
+    """
+    user = User.objects.get(pk=user_pk)
+
+    send_mail(
+        subject='Вы зарегистрировали на сайте управления рассылками',
+        message=f'Добро пожаловать на наш сайт! Пожалуйста, подтвердите вашу почту. Проверочный код: {user.code}',
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[user.email],
+        fail_silently=False
+    )
+
+
+def generate_confirmation_password():
+    """
+    Генерация пароля подтверждения.
+    """
+    password_confirmation = ''.join([str(random.randint(0, 9)) for _ in range(6)])
+    return password_confirmation
