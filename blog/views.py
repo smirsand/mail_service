@@ -6,7 +6,7 @@ from blog.services import get_blog_cache
 
 class BlogListView(ListView):
     """
-    Контроллер для просмотра блога.
+    Контроллер для просмотра списка блогов.
     """
     model = Blog
     template_name = 'blog/blog_list.html'
@@ -19,11 +19,12 @@ class BlogListView(ListView):
 
 
 class BlogDetailView(DetailView):
+    """
+    Контроллер для просмотра блога.
+    """
     model = Blog
     template_name = 'blog/blog_detail.html'
-    extra_context = {
-        'title': 'Блог'
-    }
+
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
