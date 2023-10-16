@@ -1,19 +1,19 @@
 import random
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import send_mail
-from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView
 
-from config import settings
 from message.services import send_new_password, generate_confirmation_password, send_for_confirmation
 from users.forms import UserRegisterForm, UserProfileForm, UserVerificationForm
 from users.models import User
 
 
 class RegisterView(CreateView):
+    """
+    Контроллер регистрации пользователя.
+    """
     model = User
     form_class = UserRegisterForm
     template_name = 'users/register.html'
@@ -33,15 +33,21 @@ class RegisterView(CreateView):
 
 
 class ProfileView(LoginRequiredMixin, UpdateView):
+    """
+    Контроллер редактирования пользователя.
+    """
     model = User
     form_class = UserProfileForm
     success_url = reverse_lazy('users:profile')
 
-    def get_object(self, queryset=None):  # Для редактирования текущего пользователя.
+    def get_object(self, queryset=None):
         return self.request.user
 
 
 def generate_new_password(request):
+    """
+    Генерация нового пароля.
+    """
     new_password = ''.join([str(random.randint(0, 9)) for _ in range(12)])
     request.user.set_password(new_password)
     request.user.save()
@@ -50,6 +56,9 @@ def generate_new_password(request):
 
 
 def pass_verification(request, pk):
+    """
+    Подтверждает активацию пользователя после регистрации.
+    """
     user = get_object_or_404(User, pk=pk)
 
     if request.method == 'POST':
@@ -68,6 +77,9 @@ def pass_verification(request, pk):
 
 
 def toggle_user_status(request, pk):
+    """
+    Изменяет статус активности пользователя.
+    """
     user = get_object_or_404(User, pk=pk)
 
     if user.is_active:
