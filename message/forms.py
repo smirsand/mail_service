@@ -5,8 +5,6 @@ from message.models import Newsletter, MailingMessage
 
 class NewsletterForm(forms.ModelForm):
     """Форма создания рассылки."""
-    message = forms.ModelChoiceField(queryset=MailingMessage.objects.all(), empty_label='Выберите сообщение',
-                                     label='Сообщение')
 
     class Meta:
         model = Newsletter
@@ -15,3 +13,11 @@ class NewsletterForm(forms.ModelForm):
         widgets = {
             'mailing_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
+
+
+class MailingMessageForm(forms.ModelForm):
+    """Форма создания рассылки."""
+
+    class Meta:
+        model = MailingMessage
+        fields = '__all__'
