@@ -2,16 +2,12 @@
 {% block content %}
 
 <div class="col-12 mb-5"><br>
-    {% if user.is_staff %}
-    <h1></h1>
-    {% else %}
-    <a class="btn btn-outline-primary" href="{% url 'message:create_newsletter' %}">Добавить рассылку</a>
-    {% endif %}
+    <a class="btn btn-outline-primary" href="{% url 'message:create_mailingmessage' %}">Добавить письмо</a>
 </div>
 <div class="album py-5 bg-light">
     <div class="container">
         <div class="row">
-            <h1>Список рассылок</h1><br>
+            <h1>Список писем</h1><br>
             {% for object in object_list %}
             <div class="col-md-4"><br>
                 <div class="card mb-4 box-shadow">
@@ -20,18 +16,11 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="{% url 'message:detail_newsletter' object.pk %}" type="button"
+                                    <a href="{% url 'message:detail_mailingmessage' object.pk %}" type="button"
                                        class="btn btn-sm btn-outline-secondary">Просмотр</a>
-                                    {% if perms.message.delete_newsletter %}
-                                    <a href="{% url 'message:delete_newsletter' object.pk %}" type="button"
+                                    <a href="{% url 'message:delete_mailingmessage' object.pk %}" type="button"
                                        class="btn btn-sm btn-outline-secondary">Удалить</a>
-                                    {% endif %}
                                 </div>
-                                {% if object.is_active %}
-                                    <a class="btn btn-warning" href="{% url 'message:toggle_active_newsletter' object.pk %}">Деактивировать</a>
-                                {% else %}
-                                    <a class="btn btn-success" href="{% url 'message:toggle_active_newsletter' object.pk %}">Активировать</a>
-                                {% endif %}
                             </div>
                         </div>
                     </div>
