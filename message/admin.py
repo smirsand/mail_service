@@ -16,7 +16,7 @@ class NewsletterAdmin(admin.ModelAdmin):
 
 @admin.register(MailingMessage)
 class MailingMessageAdmin(admin.ModelAdmin):
-    list_display = ('subject', 'content', 'status', 'newsletter')
+    list_display = ('subject', 'content', 'status')
     verbose_name = 'Письмо'
     verbose_name_plural = 'Письма'
 
