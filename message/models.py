@@ -7,6 +7,29 @@ from django.utils import timezone
 from client.models import Client
 
 
+class MailingMessage(models.Model):
+    """
+    Модель сообщений для рассылки.
+    """
+    SEND = 'К отправке'
+    SENT = 'Отправлено'
+
+    STATUS_CHOICES = [
+        (SEND, "К отправке"),
+        (SENT, "Отправлено"),
+    ]
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=SEND, verbose_name='статус отправки')
+    subject = models.CharField(max_length=100, verbose_name='тема письма')
+    content = models.TextField(verbose_name='тело письма')
+
+    def __str__(self):
+        return self.subject
+
+    class Meta:
+        verbose_name = 'сообщение для рассылки'
+        verbose_name_plural = 'сообщения для рассылки'
+
+
 class Newsletter(models.Model):
     """
     Модель рассылки.
@@ -42,6 +65,7 @@ class Newsletter(models.Model):
     mailing_status = models.CharField(max_length=100, choices=STATUS_CHOICES, default=CREATED,
                                       verbose_name='статус рассылки')
     clients = models.ManyToManyField(Client, related_name='newsletters', verbose_name='получатели')
+    messages = models.ManyToManyField(MailingMessage, related_name='newsletters', verbose_name='сообщения')
 
     def clients_list(self):
         return ", ".join([str(client.full_name) for client in self.clients.all()])
@@ -56,31 +80,6 @@ class Newsletter(models.Model):
         permissions = [
             ('is_active', 'Can block рассылки')
         ]
-
-
-class MailingMessage(models.Model):
-    """
-    Модель сообщений для рассылки.
-    """
-    SEND = 'К отправке'
-    SENT = 'Отправлено'
-
-    STATUS_CHOICES = [
-        (SEND, "К отправке"),
-        (SENT, "Отправлено"),
-    ]
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=SEND, verbose_name='статус отправки')
-    newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE, related_name='messages',
-                                   default=Newsletter.objects.first(), verbose_name='рассылка')
-    subject = models.CharField(max_length=100, verbose_name='тема письма')
-    content = models.TextField(verbose_name='тело письма')
-
-    def __str__(self):
-        return self.subject
-
-    class Meta:
-        verbose_name = 'сообщение для рассылки'
-        verbose_name_plural = 'сообщения для рассылки'
 
 
 class MailingLog(models.Model):
